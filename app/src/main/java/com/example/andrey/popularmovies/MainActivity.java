@@ -1,9 +1,12 @@
 package com.example.andrey.popularmovies;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.example.andrey.popularmovies.adapter.GridViewAdapter;
@@ -18,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends Activity {
-
     private static String LOG_TAG = MainActivity.class.getSimpleName();
     private GridViewAdapter gridAdapter;
 
@@ -30,6 +32,18 @@ public class MainActivity extends Activity {
         GridView gridView = (GridView) findViewById(R.id.movies_grid_view);
         gridAdapter = new GridViewAdapter(this, R.layout.image_item_view, new ArrayList<Movie>());
         gridView.setAdapter(gridAdapter);
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Movie item =  (Movie)parent.getItemAtPosition(position);
+
+                Intent intent = new Intent(MainActivity.this, MovieDetailPageActivity.class);
+                intent.putExtra("movie", item);
+
+                startActivity(intent);
+            }
+        });
 
         MovieListRequestOperation movieListRequestOperation = new MovieListRequestOperation();
         movieListRequestOperation.execute();
@@ -61,7 +75,7 @@ public class MainActivity extends Activity {
                     String posterPath = movieObject.getString("poster_path");
                     String overView = movieObject.getString("overview");
                     String title = movieObject.getString("title");
-                    double voteAverage = movieObject.getDouble("vote_average");
+                    float voteAverage = (float)movieObject.getDouble("vote_average");
                     Movie movie = new Movie(id, overView, posterPath, title, voteAverage);
                     movies.add(movie);
                 } catch (JSONException e) {

@@ -1,16 +1,15 @@
 package com.example.andrey.popularmovies.model;
 
-/**
- * Created by andrey on 2/5/16.
- */
-public class Movie {
+import java.io.Serializable;
+
+public class Movie implements Serializable {
     private int id;
     private String title;
     private String posterPath;
     private String overview;
-    private double voteAverage;
+    private float voteAverage;
 
-    public Movie(int id, String overview, String posterPath, String title, double voteAverage) {
+    public Movie(int id, String overview, String posterPath, String title, float voteAverage) {
         this.id = id;
         this.overview = overview;
         this.posterPath = posterPath;
@@ -34,7 +33,7 @@ public class Movie {
         return title;
     }
 
-    public double getVoteAverage() {
+    public float getVoteAverage() {
         return voteAverage;
     }
 
