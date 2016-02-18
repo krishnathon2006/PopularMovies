@@ -1,8 +1,8 @@
 package com.example.andrey.popularmovies;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.GridView;
 
@@ -17,7 +17,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     private static String LOG_TAG = MainActivity.class.getSimpleName();
     private GridViewAdapter gridAdapter;
