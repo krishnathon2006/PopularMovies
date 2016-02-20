@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
@@ -31,6 +32,7 @@ import java.util.List;
 public class FragmentMain extends Fragment {
     private static String LOG_TAG = FragmentMain.class.getSimpleName();
     private GridViewAdapter gridAdapter;
+    private int currentPage = 1;
 
     public FragmentMain() {
         // Required empty public constructor
@@ -49,31 +51,49 @@ public class FragmentMain extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MovieDetailPageActivity.MovieDetailPageFragment frag = (MovieDetailPageActivity.MovieDetailPageFragment)getFragmentManager().findFragmentById(R.id.dp_movie_fragment_container);
+                MovieDetailPageActivity.MovieDetailPageFragment frag = (MovieDetailPageActivity.MovieDetailPageFragment) getFragmentManager().findFragmentById(R.id.dp_movie_fragment_container);
                 Movie item = (Movie) parent.getItemAtPosition(position);
                 if (frag == null) {
                     Intent intent = new Intent(rootView.getContext(), MovieDetailPageActivity.class);
                     intent.putExtra("movie", item);
 
                     startActivity(intent);
-                } else  {
+                } else {
                     frag.updateContent(item);
                 }
             }
         });
 
-        MovieListRequestOperation movieListRequestOperation = new MovieListRequestOperation();
-        movieListRequestOperation.execute();
 
+        gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (totalItemCount > 0 && firstVisibleItem + visibleItemCount >= totalItemCount - 8) {
+                    MovieListRequestOperation movieListRequestOperation = new MovieListRequestOperation();
+                    movieListRequestOperation.execute(++currentPage);
+                }
+            }
+        });
+
+        MovieListRequestOperation movieListRequestOperation = new MovieListRequestOperation();
+        movieListRequestOperation.execute(1);
 
         return rootView;
     }
 
 
-    private class MovieListRequestOperation extends AsyncTask<Void, Void, JSONArray> {
+    private class MovieListRequestOperation extends AsyncTask<Integer, Void, JSONArray> {
         @Override
-        protected JSONArray doInBackground(Void... params) {
+        protected JSONArray doInBackground(Integer... params) {
             int pageToRequest = 1;
+            if (params[0] != null) {
+                pageToRequest = params[0];
+            }
+
             JSONArray result = MovieDb.getNowPlayingMovies(pageToRequest);
             Log.v(LOG_TAG, result.toString());
             return result;
@@ -96,7 +116,7 @@ public class FragmentMain extends Fragment {
                     String posterPath = movieObject.getString("poster_path");
                     String overView = movieObject.getString("overview");
                     String title = movieObject.getString("title");
-                    float voteAverage = (float)movieObject.getDouble("vote_average");
+                    float voteAverage = (float) movieObject.getDouble("vote_average");
                     Movie movie = new Movie(id, overView, posterPath, title, voteAverage);
                     movies.add(movie);
                 } catch (JSONException e) {
@@ -105,7 +125,6 @@ public class FragmentMain extends Fragment {
             }
 
             Log.v(LOG_TAG, movies.toString());
-            gridAdapter.clear();
             gridAdapter.addAll(movies);
             gridAdapter.notifyDataSetChanged();
         }
