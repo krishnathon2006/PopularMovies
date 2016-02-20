@@ -23,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,7 +119,8 @@ public class FragmentMain extends Fragment {
                     String overView = movieObject.getString("overview");
                     String title = movieObject.getString("title");
                     float voteAverage = (float) movieObject.getDouble("vote_average");
-                    Movie movie = new Movie(id, overView, posterPath, title, voteAverage);
+                    Date releaseDate = Date.valueOf(movieObject.getString("release_date"));
+                    Movie movie = new Movie(id, overView, posterPath, title, voteAverage, releaseDate);
                     movies.add(movie);
                 } catch (JSONException e) {
                     e.printStackTrace();

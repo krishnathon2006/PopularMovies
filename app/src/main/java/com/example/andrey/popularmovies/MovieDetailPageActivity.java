@@ -8,12 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.andrey.popularmovies.model.Movie;
 import com.example.andrey.popularmovies.util.Constants;
 import com.squareup.picasso.Picasso;
+
+import java.text.SimpleDateFormat;
 
 public class MovieDetailPageActivity extends ActionBarActivity {
 
@@ -27,7 +28,6 @@ public class MovieDetailPageActivity extends ActionBarActivity {
         movieDetailPageFragment.updateContent(movie);
     }
 
-
     public static class MovieDetailPageFragment extends Fragment {
         private Movie movie;
 
@@ -40,10 +40,8 @@ public class MovieDetailPageActivity extends ActionBarActivity {
             if (savedInstanceState != null) {
                 movie = (Movie) savedInstanceState.getSerializable("movie");
             }
-            View rootView = inflater.inflate(R.layout.fragment_movie_detail_page, container, false);
-//            updateValuesInComponents(movie);
 
-            return rootView;
+            return inflater.inflate(R.layout.fragment_movie_detail_page, container, false);
         }
 
         @Override
@@ -70,8 +68,12 @@ public class MovieDetailPageActivity extends ActionBarActivity {
                 TextView movieDescriptionComp = (TextView) getActivity().findViewById(R.id.dp_movieDescription);
                 movieDescriptionComp.setText(movie.getOverview());
 
-                RatingBar movieRatingComp = (RatingBar) getActivity().findViewById(R.id.dp_movieRating);
-                movieRatingComp.setRating(movie.getVoteAverage());
+                TextView movieRatingComp = (TextView) getActivity().findViewById(R.id.dp_movieRating);
+                movieRatingComp.setText(String.format("%.1f/5.0", movie.getVoteAverage()));
+
+                TextView releaseDateComp = (TextView) getActivity().findViewById(R.id.dp_releaseDate);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy");
+                releaseDateComp.setText(dateFormat.format(movie.getReleaseDate()));
 
                 ImageView movieImage = (ImageView) getActivity().findViewById(R.id.dp_movieImage);
                 Picasso

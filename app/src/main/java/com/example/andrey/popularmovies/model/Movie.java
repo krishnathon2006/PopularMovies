@@ -1,6 +1,7 @@
 package com.example.andrey.popularmovies.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Movie implements Serializable {
     private int id;
@@ -8,13 +9,15 @@ public class Movie implements Serializable {
     private String posterPath;
     private String overview;
     private float voteAverage;
+    private Date releaseDate;
 
-    public Movie(int id, String overview, String posterPath, String title, float voteAverage) {
+    public Movie(int id, String overview, String posterPath, String title, float voteAverage, Date releaseDate) {
         this.id = id;
         this.overview = overview;
         this.posterPath = posterPath;
         this.title = title;
         this.voteAverage = voteAverage;
+        this.releaseDate = releaseDate;
     }
 
     public int getId() {
@@ -35,6 +38,14 @@ public class Movie implements Serializable {
 
     public float getVoteAverage() {
         return voteAverage;
+    }
+
+    public Date getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(Date releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
     @Override
