@@ -33,6 +33,7 @@ public class FragmentMain extends Fragment {
     private static String LOG_TAG = FragmentMain.class.getSimpleName();
     private GridViewAdapter gridAdapter;
     private int currentPage = 1;
+    private Movie selectedMovie;
 
     public FragmentMain() {
         // Required empty public constructor
@@ -52,14 +53,14 @@ public class FragmentMain extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MovieDetailPageActivity.MovieDetailPageFragment frag = (MovieDetailPageActivity.MovieDetailPageFragment) getFragmentManager().findFragmentById(R.id.dp_movie_fragment_container);
-                Movie item = (Movie) parent.getItemAtPosition(position);
+                selectedMovie = (Movie) parent.getItemAtPosition(position);
                 if (frag == null) {
                     Intent intent = new Intent(rootView.getContext(), MovieDetailPageActivity.class);
-                    intent.putExtra("movie", item);
+                    intent.putExtra("movie", selectedMovie);
 
                     startActivity(intent);
                 } else {
-                    frag.updateContent(item);
+                    frag.updateContent(selectedMovie);
                 }
             }
         });
@@ -72,7 +73,7 @@ public class FragmentMain extends Fragment {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (totalItemCount > 0 && firstVisibleItem + visibleItemCount >= totalItemCount - 8) {
+                if (totalItemCount > 0 && firstVisibleItem + visibleItemCount >= totalItemCount - visibleItemCount) {
                     MovieListRequestOperation movieListRequestOperation = new MovieListRequestOperation();
                     movieListRequestOperation.execute(++currentPage);
                 }
@@ -127,6 +128,14 @@ public class FragmentMain extends Fragment {
             Log.v(LOG_TAG, movies.toString());
             gridAdapter.addAll(movies);
             gridAdapter.notifyDataSetChanged();
+
+            if (selectedMovie == null) {
+                MovieDetailPageActivity.MovieDetailPageFragment frag = (MovieDetailPageActivity.MovieDetailPageFragment) getFragmentManager().findFragmentById(R.id.dp_movie_fragment_container);
+                if (frag != null) {
+                    selectedMovie = movies.get(0);
+                    frag.updateContent(selectedMovie);
+                }
+            }
         }
     }
 
