@@ -69,7 +69,7 @@ public class MovieDetailPageActivity extends ActionBarActivity {
                 movieDescriptionComp.setText(movie.getOverview());
 
                 TextView movieRatingComp = (TextView) getActivity().findViewById(R.id.dp_movieRating);
-                movieRatingComp.setText(String.format("%.1f/5.0", movie.getVoteAverage()));
+                movieRatingComp.setText(String.format("%.1f/10.0", movie.getVoteAverage()));
 
                 TextView releaseDateComp = (TextView) getActivity().findViewById(R.id.dp_releaseDate);
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy");

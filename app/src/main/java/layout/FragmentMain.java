@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -18,6 +21,7 @@ import com.example.andrey.popularmovies.R;
 import com.example.andrey.popularmovies.adapter.GridViewAdapter;
 import com.example.andrey.popularmovies.dao.MovieDb;
 import com.example.andrey.popularmovies.model.Movie;
+import com.example.andrey.popularmovies.model.SearchCategory;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,15 +39,47 @@ public class FragmentMain extends Fragment {
     private GridViewAdapter gridAdapter;
     private int currentPage = 1;
     private Movie selectedMovie;
+    private SearchCategory selectedMoviesCategory = SearchCategory.now_playing;
 
     public FragmentMain() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.movie_list_fragment_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.menu_list_most_popular) {
+            selectedMoviesCategory = SearchCategory.popular;
+        } else if (id == R.id.menu_list_top_rated) {
+            selectedMoviesCategory = SearchCategory.top_rated;
+        } else {
+            // Default menu - "Now playing movies"
+            selectedMoviesCategory = SearchCategory.now_playing;
+        }
+
+        gridAdapter.clear();
+        selectedMovie = null;
+        MovieListRequestOperation movieListRequestOperation = new MovieListRequestOperation();
+        movieListRequestOperation.execute(1);
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         final View rootView = inflater.inflate(R.layout.fragment_fragment_main, container, false);
 
         GridView gridView = (GridView) rootView.findViewById(R.id.movies_grid_view);
@@ -96,8 +132,16 @@ public class FragmentMain extends Fragment {
                 pageToRequest = params[0];
             }
 
-            JSONArray result = MovieDb.getNowPlayingMovies(pageToRequest);
-            Log.v(LOG_TAG, result.toString());
+            JSONArray result;
+            if (SearchCategory.popular == selectedMoviesCategory) {
+                result = MovieDb.getMostPopularMovies(pageToRequest);
+            } else if (SearchCategory.top_rated == selectedMoviesCategory) {
+                result = MovieDb.getTopRatedMovies(pageToRequest);
+            } else {
+                result = MovieDb.getNowPlayingMovies(pageToRequest);
+            }
+
+            Log.d(LOG_TAG, result.toString());
             return result;
         }
 

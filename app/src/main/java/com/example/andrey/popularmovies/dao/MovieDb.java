@@ -3,6 +3,8 @@ package com.example.andrey.popularmovies.dao;
 import android.net.Uri;
 import android.util.Log;
 
+import com.example.andrey.popularmovies.model.SearchCategory;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -23,7 +25,7 @@ public class MovieDb {
      * @return JSONArray of popular movies
      */
     public static JSONArray getMostPopularMovies(int page) {
-        return sendRequest(getUrlToApi(SEARCH_CATEGORY.popular, page));
+        return sendRequest(getUrlToApi(SearchCategory.popular, page));
     }
 
     /**
@@ -33,7 +35,7 @@ public class MovieDb {
      * @return JSONArray of playing now movies.
      */
     public static JSONArray getNowPlayingMovies(int page) {
-        return sendRequest(getUrlToApi(SEARCH_CATEGORY.now_playing, page));
+        return sendRequest(getUrlToApi(SearchCategory.now_playing, page));
     }
 
     /**
@@ -43,7 +45,7 @@ public class MovieDb {
      * @return JSONArray of top rated movies
      */
     public static JSONArray getTopRatedMovies(int page) {
-        return sendRequest(getUrlToApi(SEARCH_CATEGORY.top_rated, page));
+        return sendRequest(getUrlToApi(SearchCategory.top_rated, page));
     }
 
     private static String getApiKey() {
@@ -85,7 +87,7 @@ public class MovieDb {
         return null;
     }
 
-    private static Uri getUrlToApi(SEARCH_CATEGORY category, int page) {
+    private static Uri getUrlToApi(SearchCategory category, int page) {
         final String SCHEME = "https";
         final String MOVIE_DB_API_VERSION = "3";
         final String MOVIE_DB_CATALOG_FOR_MOVIES = "movie";
@@ -100,11 +102,5 @@ public class MovieDb {
                 .appendQueryParameter("page", String.valueOf(page))
                 .appendQueryParameter("api_key", getApiKey())
                 .build();
-    }
-
-    private enum SEARCH_CATEGORY {
-        popular,
-        now_playing,
-        top_rated
     }
 }
