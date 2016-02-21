@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.example.andrey.popularmovies.R;
 import com.example.andrey.popularmovies.model.Movie;
+import com.example.andrey.popularmovies.util.Constants;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -32,12 +33,10 @@ public class GridViewAdapter extends ArrayAdapter<Movie> {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             convertView = inflater.inflate(layoutResourceId, parent, false);
         }
-        Picasso
-                .with(context).setIndicatorsEnabled(true);
 
         Picasso
                 .with(context)
-                .load("http://image.tmdb.org/t/p/original/" + movieList.get(position).getPosterPath())
+                .load(Constants.urlToMoviePoster + movieList.get(position).getPosterPath())
                 .placeholder(R.drawable.movie_placeholder).fit()
                 .into((ImageView) convertView.findViewById(R.id.image_item_view));
 
