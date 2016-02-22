@@ -29,17 +29,19 @@ public class GridViewAdapter extends ArrayAdapter<Movie> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ImageView imageView;
         if (null == convertView) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             convertView = inflater.inflate(layoutResourceId, parent, false);
         }
 
+        imageView = (ImageView) convertView;
         Picasso
                 .with(context)
                 .load(Constants.urlToMoviePoster + movieList.get(position).getPosterPath())
                 .placeholder(R.drawable.movie_placeholder).fit()
-                .into((ImageView) convertView.findViewById(R.id.image_item_view));
+                .into(imageView);
 
-        return convertView;
+        return imageView;
     }
 }
