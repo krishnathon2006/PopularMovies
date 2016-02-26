@@ -79,6 +79,7 @@ public class MovieDetailPageActivity extends ActionBarActivity {
                 Picasso
                         .with(getActivity())
                         .load(Constants.urlToMoviePoster + movie.getPosterPath())
+                        .placeholder(R.drawable.movie_placeholder)
                         .fit()
                         .into(movieImage);
             }

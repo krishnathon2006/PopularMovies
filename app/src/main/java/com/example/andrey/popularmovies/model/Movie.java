@@ -44,10 +44,6 @@ public class Movie implements Serializable {
         return releaseDate;
     }
 
-    public void setReleaseDate(Date releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
